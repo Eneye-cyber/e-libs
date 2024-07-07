@@ -35,7 +35,7 @@ trait FileHandler {
      * @param  string  $disk
      * @return bool  True if the file was deleted, false otherwise.
      */
-    protected function deleteFile(string $fileUrl, string $disk = 'public') : bool
+    protected function deleteFile(string $fileUrl = null, string $disk = 'public') : bool
     {
         if(is_null($fileUrl)){
             return false;
