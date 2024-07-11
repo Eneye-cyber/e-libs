@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
@@ -17,9 +18,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|confirmed|min:6',
+            'name' => 'bail|required|string|max:255',
+            'email' => 'bail|required|email|unique:users,email',
+            'password' => 'bail|required|string|confirmed|min:6',
         ]);
 
        if ($validator->fails()) {
@@ -38,7 +39,7 @@ class AuthController extends Controller
             ];
     
             return $this->success($response);
-       } catch (\Throwable $th) {
+       } catch (\Throwable $exception) {
             Log::error([
                 "message" => $exception->getMessage(),
                 "controller_action" => "AuthController@register",
@@ -64,12 +65,12 @@ class AuthController extends Controller
         try {
             if (! $token = auth()->attempt($validator->validated())) {
                 Log::warning(["message" => "Unauthorized user attempt"]);
-                return $this->error('Unauthorized', 401);
+                return $this->error('Unauthorized user attempt', 401);
             }
 
             Log::info(["message" => "Login Successful"]);
             return $this->respondWithToken($token);
-        } catch (\Throwable $th) {
+        } catch (\Throwable $exception) {
             Log::error([
                 "message" => $exception->getMessage(),
                 "controller_action" => "AuthController@login",
@@ -80,10 +81,45 @@ class AuthController extends Controller
   
     }
 
+    public function isLoggedIn(Request $request)
+    {
+        try {
+            if (!$user = auth()->user()) {
+                return $this->error('User not found', 404);
+            }
+
+            $token = $request->bearerToken();
+            Log::info($token);
+
+        } catch (JWTException $e) {
+            return $this->error('Token is invalid or expired', 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            JWTAuth::invalidate(JWTAuth::parseToken());
+
+            return $this->success(["message" => "Signout Successfull"]);
+        } catch (JWTException $e) {
+            Log::error([
+                "message" => $e->getMessage(),
+                "controller_action" => "AuthController@logout",
+                "line" => $e->getLine()
+            ]);
+            return $this->error('Failed to logout', 500);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
     protected function respondWithToken($token)
     {
         $response = [
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
