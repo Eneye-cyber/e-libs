@@ -34,5 +34,6 @@ Route::middleware('auth:api')->group(function ($router) {
         'books' => BookController::class,
     ]);
     Route::post('/upload', [UploadController::class, 'UpdateFile']);
+    Route::get('/signout', [AuthController::class, 'logout']);
 
 });

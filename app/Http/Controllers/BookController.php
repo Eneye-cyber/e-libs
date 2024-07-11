@@ -106,7 +106,7 @@ class BookController extends Controller
         try {
 
             Log::info("Fetch specified book");
-            $book = Book::find($id);
+            $book = Book::with('author')->where('id', $id)->firstOrFail();
 
             if ($book) {
                 return $this->success($book);

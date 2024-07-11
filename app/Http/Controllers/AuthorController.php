@@ -134,15 +134,14 @@ class AuthorController extends Controller
 
         try {
             $author = Author::findOrFail($id);
+            // Delete Image
+            $this->deleteFile($author->profile_image);
+            
             // Delete the user
             Log::info(["message" => "Delete author {$author->getFullName()}"]);
-            // Delete Image
-            if($this->deleteFile($author->profile_image)) {
-                $author->delete();
-                return response()->json(['message' => 'Author deleted successfully.'], 200);
-            }
+            $author->delete();
+            return response()->json(['message' => 'Author deleted successfully.'], 200);
 
-            throw new Exception("Unable to delete author information", 1);
             
 
         } catch (\Throwable $th) {
