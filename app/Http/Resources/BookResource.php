@@ -21,6 +21,6 @@ class BookResource extends JsonResource
             'cover_image' => $this->cover_image,
             'author' => new AuthorResource($this->author),
             'status' => $this->status
-        ];;
+        ];
     }
 }

@@ -146,6 +146,8 @@ class BookController extends Controller
             }
             $book = $book->fill($data);
 
+            $book->save();
+
             return $this->success($book);
        
         } catch (\Throwable $exception) {

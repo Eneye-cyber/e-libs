@@ -113,7 +113,6 @@ class AuthController extends Controller
             return $this->error('Failed to logout', 500);
         }
 
-        return $this->respondWithToken($token);
     }
 
     protected function respondWithToken($token)

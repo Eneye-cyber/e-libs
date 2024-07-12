@@ -15,19 +15,19 @@ use Illuminate\Support\Facades\Validator;
 class UploadController extends Controller
 {
     use HttpResponses, FileHandler;
-    public function UpdateFile(UploadFileRequest $request)
+    public function updateFile(UploadFileRequest $request)
     {
         $data = $request->all();
 
         if($data['group'] === 'author') {
             Log::info(["message" => "Change author avatar picture"]);
-            return $this->UpdateProfilePicture($data);
+            return $this->updateProfilePicture($data);
         }
 
-        return $this->UpdateBookMedia($data);
+        return $this->updateBookMedia($data);
     }
 
-    public function UpdateProfilePicture($data)
+    protected function updateProfilePicture($data)
     {
         $image = $data['image'];
         $id = $data['id'];
@@ -56,7 +56,7 @@ class UploadController extends Controller
         }
     }
 
-    public function UpdateBookMedia($data)
+    protected function updateBookMedia($data)
     {
         $image = $data['image'] ?? null;
         $file = $data['book'] ?? null;
@@ -86,7 +86,7 @@ class UploadController extends Controller
         } catch (\Throwable $exception) {
             Log::error([
                 "message" => $exception->getMessage(),
-                "controller_action" => "UploadController@UpdateBookMedia",
+                "controller_action" => "UploadController@updateBookMedia",
                 "line" => $exception->getLine()
             ]);
             return $this->error('Server Error', 503);
