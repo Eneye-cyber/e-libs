@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UploadController;
 
 /*
@@ -18,11 +19,6 @@ use App\Http\Controllers\UploadController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -33,7 +29,9 @@ Route::middleware('auth:api')->group(function ($router) {
         'authors' => AuthorController::class,
         'books' => BookController::class,
     ]);
-    Route::post('/upload', [UploadController::class, 'UpdateFile']);
+    
+    Route::get('/search', [SearchController::class, 'search']);
+    Route::post('/upload', [UploadController::class, 'updateFile']);
     Route::get('/signout', [AuthController::class, 'logout']);
 
 });
