@@ -12,11 +12,61 @@ use App\Http\Resources\AuthorCollection;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 
+
+/**
+ * @OA\Tag(
+ *     name="Authors",
+ *     description="API Endpoints for managing authors"
+ * )
+ */
 class AuthorController extends Controller
 {
     use HttpResponses, FileHandler;
     /**
      * Display a listing of the resource.
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/authors",
+     *     tags={"Authors"},
+     *     summary="Get paginated list of authors",
+     *     description="Fetches a paginated list of authors.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="page_size",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Pagination Page Number",
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Author")),
+     *             @OA\Property(property="links", type="object"),
+     *             @OA\Property(property="meta", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Server error")
+     *         )
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -37,6 +87,46 @@ class AuthorController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/authors",
+     *     tags={"Authors"},
+     *     summary="Create a new author",
+     *     description="Creates a new author.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Author data",
+     *         @OA\JsonContent(ref="#/components/schemas/StoreAuthorRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Author created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/Author")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Validation error message")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unable to save author")
+     *         )
+     *     )
+     * )
      */
     public function store(StoreAuthorRequest $request)
     {
@@ -80,6 +170,47 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/authors/{id}",
+     *     tags={"Authors"},
+     *     summary="Get a specific author",
+     *     description="Fetches details of a specific author.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the author",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/Author")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Author not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Author not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Server error")
+     *         )
+     *     )
+     * )
+     */
     public function show(String $id)
     {
         try {
@@ -98,6 +229,52 @@ class AuthorController extends Controller
 
     /**
      * Update the specified resource in storage.
+     */
+        /**
+     * @OA\Put(
+     *     path="/api/authors/{id}",
+     *     tags={"Authors"},
+     *     summary="Update an existing author",
+     *     description="Updates details of an existing author.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the author",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Author data",
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateAuthorRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Author updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/Author")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Validation error message")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Something Went Wrong")
+     *         )
+     *     )
+     * )
      */
     public function update(UpdateAuthorRequest $request, string $id)
     {
@@ -128,6 +305,40 @@ class AuthorController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/authors/{id}",
+     *     tags={"Authors"},
+     *     summary="Delete an author",
+     *     description="Deletes an existing author.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the author",
+     *         @OA\Schema(type="string", format="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Author deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Author deleted successfully.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Server error")
+     *         )
+     *     )
+     * )
      */
     public function destroy(string $id)
     {

@@ -4,6 +4,18 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreAuthorRequest",
+ *     title="StoreAuthorRequest",
+ *     required={"first_name", "last_name", "slug", "biography", "profile_image"},
+ *     @OA\Property(property="first_name", type="string", example="John"),
+ *     @OA\Property(property="last_name", type="string", example="Doe"),
+ *     @OA\Property(property="slug", type="string", example="john-doe"),
+ *     @OA\Property(property="biography", type="string", example="Author biography."),
+ *     @OA\Property(property="profile_image", type="string", example="http://example.com/profile.jpg"),
+ * )
+ */
 class StoreAuthorRequest extends FormRequest
 {
     /**

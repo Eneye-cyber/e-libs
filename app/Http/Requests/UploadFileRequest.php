@@ -4,6 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="UploadFileRequest",
+ *     title="UploadFileRequest",
+ *     required={"id", "group"},
+ *     @OA\Property(property="id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000"),
+ *     @OA\Property(property="group", type="string", enum={"author", "book"}, example="book"),
+ *     @OA\Property(property="image", type="string", format="binary", example="image data"),
+ *     @OA\Property(property="book", type="string", format="binary", example="book file data"),
+ * )
+ */
 class UploadFileRequest extends FormRequest
 {
     /**

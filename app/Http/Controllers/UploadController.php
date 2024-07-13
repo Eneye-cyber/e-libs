@@ -12,9 +12,55 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadFileRequest;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Upload",
+ *     description="API Endpoints for uploading files (avatar for authors, media files for books)"
+ * )
+ */
 class UploadController extends Controller
 {
     use HttpResponses, FileHandler;
+
+      /**
+     * @OA\Post(
+     *     path="/api/upload",
+     *     tags={"Upload"},
+     *     summary="Update author avatar or book media",
+     *     description="Update author avatar or book media (cover image or book file). Requires authentication.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Upload file request body",
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 ref="#/components/schemas/UploadFileRequest"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File upload successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="message", type="string", example="Image Upload Successful"),
+     *                 @OA\Property(property="author", type="object", ref="#/components/schemas/Author"),
+     *                 @OA\Property(property="book", type="object", ref="#/components/schemas/Book"),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=503,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Server Error"),
+     *         )
+     *     )
+     * )
+     */
     public function updateFile(UploadFileRequest $request)
     {
         $data = $request->all();
