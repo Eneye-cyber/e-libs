@@ -50,7 +50,7 @@ class AuthorController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Author")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/AuthorResource")),
      *             @OA\Property(property="links", type="object"),
      *             @OA\Property(property="meta", type="object")
      *         )
@@ -214,7 +214,7 @@ class AuthorController extends Controller
     public function show(String $id)
     {
         try {
-            $author = Author::find($id);
+            $author = Author::with('books')->where('id', $id)->first();
 
             if ($author) {
                 return $this->success($author);
@@ -287,10 +287,13 @@ class AuthorController extends Controller
             $author = Author::findOrFail($id);
             $author = $author->fill($data);
 
-            $name = "{$author->first_name} {$author->last_name}";
+            $name = "$author->first_name $author->last_name";
             $slug = Str::slug($name);
+            Log::info(["message"=> "Verify Slug $slug is $author->slug"]);
             $author->slug = $author->slug === $slug ? $author->slug : $slug;
 
+            Log::info(["message"=> "save info"]);
+            $author->save();
             return $this->success($author);
 
         } catch (\Throwable $exception) {
@@ -351,7 +354,7 @@ class AuthorController extends Controller
             // Delete the user
             Log::info(["message" => "Delete author {$author->getFullName()}"]);
             $author->delete();
-            return response()->json(['message' => 'Author deleted successfully.'], 200);
+            return $this->success(['message' => 'Author deleted successfully.']);
 
             
 

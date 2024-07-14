@@ -89,6 +89,12 @@ This Laravel project provides a well-structured and secure RESTful API for manag
    ```bash
    php artisan serve
    ```
+   or
+
+   ```bash
+   php -S localhost:8000 -t public/
+   ```
+
 
 2. **API Documentation:** 
 The API documentation (Swagger/OpenAPI) is accessible via /api/documentation for detailed endpoint usage

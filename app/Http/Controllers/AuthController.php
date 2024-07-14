@@ -251,7 +251,7 @@ class AuthController extends Controller
     }
 
      /**
-     * @OA\Post(
+     * @OA\Get(
      *     path="/api/signout",
      *     summary="Logout a user",
      *     tags={"Auth"},

@@ -54,6 +54,77 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *     ),
  *     @OA\Property(property="status", type="string", enum={"draft", "published", "archived"}, example="published")
  * )
+ * 
+ * /**
+ * @OA\Schema(
+ *     schema="ShowBookResource",
+ *     type="object",
+ *     title="Show Book Resource",
+ *     description="Resource representation of a book",
+ *     @OA\Property(
+ *         property="id",
+ *         type="string",
+ *         description="ID of the book",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
+ *         property="title",
+ *         type="string",
+ *         description="Title of the book",
+ *         example="Example Book Title"
+ *     ),
+ *     @OA\Property(
+ *         property="description",
+ *         type="string",
+ *         description="Description of the book",
+ *         example="This is an example description of the book."
+ *     ),
+ *     @OA\Property(
+ *         property="published_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Publication date of the book",
+ *         example="2024-07-13T19:05:39.000000Z"
+ *     ),
+ *     @OA\Property(
+ *         property="cover_image",
+ *         type="string",
+ *         description="URL of the book's cover image",
+ *         example="http://example.com/cover.jpg"
+ *     ),
+ *     @OA\Property(
+ *         property="book_file",
+ *         type="string",
+ *         description="URL of the book file",
+ *         example="http://example.com/book.pdf"
+ *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="Completion status of the book",
+ *         example="incomplete"
+ *     ),
+ *     @OA\Property(
+ *         property="author",
+ *         ref="#/components/schemas/AuthorResource",
+ *         description="Author of the book"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Timestamp when the book was created",
+ *         example="2024-07-13T19:05:39.000000Z"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Timestamp when the book was last updated",
+ *         example="2024-07-13T19:05:39.000000Z"
+ *     )
+ * )
+ *
  */
 
 class Book extends Model

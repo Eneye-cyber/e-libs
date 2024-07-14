@@ -339,12 +339,12 @@
             }
         },
         "/api/signout": {
-            "post": {
+            "get": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Logout a user",
-                "operationId": "b46f8611fc7d1123f2a3d573cee661c4",
+                "operationId": "43ce3b3d0b0c7a68db4f95f44ddf0a2c",
                 "responses": {
                     "200": {
                         "description": "Signout Successful",
@@ -431,7 +431,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Author"
+                                                "$ref": "#/components/schemas/AuthorResource"
                                             }
                                         },
                                         "links": {
@@ -876,11 +876,16 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
+                        "description": "Book created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Book"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Book"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -953,7 +958,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Book"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/ShowBookResource"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1034,7 +1044,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Book"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Book"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1619,6 +1634,64 @@
                             "archived"
                         ],
                         "example": "published"
+                    }
+                },
+                "type": "object"
+            },
+            "ShowBookResource": {
+                "title": "Show Book Resource",
+                "description": "Resource representation of a book",
+                "properties": {
+                    "id": {
+                        "description": "ID of the book",
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "Title of the book",
+                        "type": "string",
+                        "example": "Example Book Title"
+                    },
+                    "description": {
+                        "description": "Description of the book",
+                        "type": "string",
+                        "example": "This is an example description of the book."
+                    },
+                    "published_at": {
+                        "description": "Publication date of the book",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-07-13T19:05:39.000000Z"
+                    },
+                    "cover_image": {
+                        "description": "URL of the book's cover image",
+                        "type": "string",
+                        "example": "http://example.com/cover.jpg"
+                    },
+                    "book_file": {
+                        "description": "URL of the book file",
+                        "type": "string",
+                        "example": "http://example.com/book.pdf"
+                    },
+                    "status": {
+                        "description": "Completion status of the book",
+                        "type": "string",
+                        "example": "incomplete"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/AuthorResource"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the book was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-07-13T19:05:39.000000Z"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the book was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-07-13T19:05:39.000000Z"
                     }
                 },
                 "type": "object"

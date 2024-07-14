@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Http\Request;
 use App\Enums\BookStatusEnum;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -34,10 +37,16 @@ class UpdateBookRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(Request $request): array
     {
+        $bookId = $request->route('book');
         return [
-            'title' => 'sometimes|string|max:255|unique:books,title,',
+            'title' => [
+                'sometimes',
+                'string',
+                'max:255',
+                Rule::unique('books', 'title')->ignore($bookId),
+            ],
             'description' => 'sometimes|string',
             'published_at' => 'sometimes|date|date_format:Y-m-d',
             'cover_image' => 'sometimes|url',

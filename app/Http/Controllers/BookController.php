@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\BookCollection;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Http\Resources\ShowBookResource;
 
 /**
  * @OA\Tag(
@@ -108,8 +109,10 @@ class BookController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Book")
+     *         description="Book created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/Book")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -139,12 +142,12 @@ class BookController extends Controller
         [
             'title' => $title,
             'cover_image' => $cover_image,
-            'author_id' => $author_id,
         ] = $data;
 
         $imageUrl = null;
         $fileUrl = null;
         $book_file = isset($data['book_file']) ? $data['book_file'] : null;
+        $author_id = isset($data['author_id']) ? $data['author_id'] : null;
         
         try {
             Log::info("Store book cover picture");
@@ -203,7 +206,9 @@ class BookController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Book")
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/ShowBookResource")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -230,9 +235,10 @@ class BookController extends Controller
         try {
 
             Log::info("Fetch specified book");
-            $book = Book::with('author')->where('id', $id)->firstOrFail();
+            $book = Book::with('author')->where('id', $id)->first();
 
             if ($book) {
+                $book = new ShowBookResource($book);
                 return $this->success($book);
             }
             Log::error([
@@ -275,7 +281,9 @@ class BookController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Book")
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/Book")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -376,16 +384,16 @@ class BookController extends Controller
             $this->deleteFile($book->book_file);
             $book->delete();
 
-            return response()->json(['message' => 'Book deleted successfully.'], 200);
+            return $this->success(['message' => 'Book deleted successfully.']);
             
 
         } catch (\Throwable $th) {
             Log::error([
-                "message" =>  $exception->getMessage(),
+                "message" =>  $th->getMessage(),
                 "controller_action" => "BookController@destroy",
-                "line" => $exception->getLine()
+                "line" => $th->getLine()
             ]);
-            return $this->error($exception->getMessage(), 500);
+            return $this->error($th->getMessage(), 500);
         }
     }
 }
