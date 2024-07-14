@@ -105,6 +105,7 @@ The API documentation (Swagger/OpenAPI) is accessible via /api/documentation for
   ```bash
   php artisan test
   ```
+  To avoid untracked modification to data, use a different database for testing purpose **See Below for testing Configuration**
 
 **Deployment:**
 
@@ -112,3 +113,39 @@ The API documentation (Swagger/OpenAPI) is accessible via /api/documentation for
 
 **Additional Notes:**
 All Routes relating to Books, Author and search are protected routes that require authentication
+
+
+**Testing Configuration**
+To configure a different database for unit testing in a Laravel application and ensure that the database is reset after each test run, follow these steps:
+
+### 1. Set Up a Separate Testing Database
+
+First, make sure you have a separate database for testing. You can create this database using your preferred database management tool or command-line interface.
+
+### 2. Configure Testing Database in `phpunit.xml`
+
+Edit the `phpunit.xml` file at the root of your Laravel project:
+
+```xml
+<phpunit>
+    <!-- ... other configurations ... -->
+    <php>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_DATABASE" value="your_testing_database_name"/>
+        <env name="DB_USERNAME" value="your_testing_database_user"/>
+        <env name="DB_PASSWORD" value="your_testing_database_password"/>
+    </php>
+</phpunit>
+```
+
+Replace `your_testing_database_name`, `your_testing_database_user`, and `your_testing_database_password` with your actual testing database credentials.
+
+
+### 3. Run Your Tests
+
+
+To run your tests, use the following command:
+
+```bash
+php artisan test
+```

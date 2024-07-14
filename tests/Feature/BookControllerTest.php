@@ -162,7 +162,7 @@ class BookControllerTest extends TestCase
                             ->deleteJson("/api/books/$book->id");
 
         $response->assertStatus(200)
-                 ->assertJson(['message' => 'Book deleted successfully.']);
+                 ->assertJson(['data' => ['message' => 'Book deleted successfully.']]);
         
         Storage::disk('public')->assertMissing('covers/' . 'book-to-be-deleted.jpg');
         Storage::disk('public')->assertMissing('books/' . 'book-to-be-deleted.pdf');
