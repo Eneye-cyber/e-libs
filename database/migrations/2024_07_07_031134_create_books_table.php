@@ -19,12 +19,19 @@ return new class extends Migration
             $table->string('cover_image')->nullable(); // Optional image field
             $table->string('book_file')->nullable(); // Optional File field
             $table->enum('status', ['Incomplete', 'Completed', 'Unavailable'])->default('Unavailable');
+            $table->uuid('author_id')->nullable();
 
-            $table->string('author_id')->nullable();
+            // Foreign key constraint
             $table->foreign('author_id')->references('id')->on('authors')->onDelete('set null');
-            $table->timestamps();
 
+            $table->timestamps();
         });
+
+        // Index creation for foreign key
+        Schema::table('books', function (Blueprint $table) {
+            $table->index('author_id');
+        });
+        
     }
 
     /**
