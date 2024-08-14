@@ -18,7 +18,9 @@ use App\Http\Controllers\UploadController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::get('/health', function () {
+    return response()->json(['status' => 'healthy'], 200);
+});
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
